@@ -1,6 +1,6 @@
 // DateTime definition object
 
-import {isNumber} from 'vega-util';
+import {isNumber, isString} from 'vega-util';
 import * as log from './log';
 import {duplicate, keys} from './util';
 
@@ -188,8 +188,12 @@ function normalizeDay(d: string | number) {
  * @param d
  * @param normalize whether to normalize quarter, month, day.
  */
-export function dateTimeExpr(d: DateTime | DateTimeExpr, normalize = false) {
+export function dateTimeExpr(d: DateTime | DateTimeExpr | string, normalize = false) {
   const units: (string | number)[] = [];
+
+  if (isString(d)) {
+    return `datetime(${d})`;
+  }
 
   if (normalize && d.day !== undefined) {
     if (keys(d).length > 1) {

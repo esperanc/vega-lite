@@ -3,7 +3,7 @@ import {SHARED_DOMAIN_OP_INDEX} from '../../aggregate';
 import {binToString, isBinParams} from '../../bin';
 import {isScaleChannel, ScaleChannel} from '../../channel';
 import {MAIN, RAW} from '../../data';
-import {DateTime, dateTimeExpr, isDateTime} from '../../datetime';
+import {dateTimeExpr, isDateTime} from '../../datetime';
 import {FieldDef, ScaleFieldDef, vgField} from '../../fielddef';
 import * as log from '../../log';
 import {Domain, hasDiscreteDomain, isBinScale, isSelectionDomain, ScaleConfig, ScaleType} from '../../scale';
@@ -164,11 +164,13 @@ function parseSingleChannelDomain(scaleType: ScaleType, domain: Domain, model: U
   const fieldDef = model.fieldDef(channel);
 
   if (domain && domain !== 'unaggregated' && !isSelectionDomain(domain)) { // explicit value
-    if (isDateTime(domain[0])) {
-      return (domain as DateTime[]).map((dt) => {
-        return {signal: `{data: ${dateTimeExpr(dt, true)}}`};
+    if (fieldDef.type === 'temporal' || fieldDef.timeUnit) {
+      return domain.map(v => {
+        const data = isDateTime(v) || isString(v) ? dateTimeExpr(v, true) : v;
+        return {signal: `{data: ${data}}`};
       });
     }
+
     return [domain];
   }
 

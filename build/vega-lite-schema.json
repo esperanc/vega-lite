@@ -6047,25 +6047,20 @@
           "anyOf": [
             {
               "items": {
-                "type": "number"
-              },
-              "type": "array"
-            },
-            {
-              "items": {
-                "type": "string"
-              },
-              "type": "array"
-            },
-            {
-              "items": {
-                "type": "boolean"
-              },
-              "type": "array"
-            },
-            {
-              "items": {
-                "$ref": "#/definitions/DateTime"
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "$ref": "#/definitions/DateTime"
+                  }
+                ]
               },
               "type": "array"
             },
